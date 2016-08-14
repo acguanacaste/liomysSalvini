@@ -1,7 +1,7 @@
 {
-  "name": "mern-starter",
-  "version": "2.0.0",
-  "description": "Boilerplate project for building Isomorphic apps using React and Redux",
+  "name": "lyomisSalvini",
+  "version": "0.0.1",
+  "description": "Interfaz administrativa para ACGNaturalista, un programa que permite generar apps de guías de campo.",
   "scripts": {
     "test": "cross-env NODE_ENV=test PORT=8080 MONGO_URL=mongodb://localhost:27017/mern-test node_modules/.bin/nyc node --harmony-proxies node_modules/.bin/ava",
     "watch:test": "npm run test -- --watch",
@@ -22,13 +22,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Hashnode/mern-starter.git"
+    "url": "git+https://github.com/acguanacaste/liomysSalvini.git"
   },
   "bugs": {
-    "url": "https://github.com/Hashnode/mern-starter/issues"
+    "url": "https://github.com/acguanacaste/liomysSalvini/issues"
   },
-  "homepage": "https://github.com/Hashnode/mern-starter#readme",
-  "author": "Prashant Abhishek <prashant.abhishek7g@gmail.com>, Mayank Chandola <imayankchd@gmail.com>, Sandeep Panda <sandeep@hashnode.com>, Syed Fazle Rahman <fazle@hashnode.com>, Alkshendra Maurya <alkshendra@hashnode.com>",
+  "homepage": "https://github.com/acguanacaste/liomysSalvinireadme",
+  "author": "Federico Matarrita <federico@usematics.com>, José Mario Moraga <JOSE.MORAGA@ucr.ac.cr>, Marcos Junez <marcjv182@gmail.com>, Carlos Hernández <carher88@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "babel-core": "^6.9.1",

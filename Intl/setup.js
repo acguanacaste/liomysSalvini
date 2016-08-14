@@ -2,6 +2,7 @@
 export const enabledLanguages = [
   'en',
   'fr',
+  'es'
 ];
 
 // this object will have language-specific data added to it which will be placed in the state when that language is active
@@ -49,3 +50,10 @@ import frData from './localizationData/fr';
 addLocaleData(fr);
 localizationData.fr = frData;
 localizationData.fr.messages = flattenMessages(localizationData.fr.messages);
+
+import 'intl/locale-data/jsonp/es';
+import es from 'react-intl/locale-data/es';
+import esData from './localizationData/es';
+addLocaleData(es);
+localizationData.es = esData;
+localizationData.es.messages = flattenMessages(localizationData.es.messages);

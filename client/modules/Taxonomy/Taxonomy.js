@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 // Import Style
-import styles from './Familia.css';
+import styles from './Taxonomy.css';
 
-class Familia extends Component {
+class Taxonomy extends Component {
   render() {
     return (
     );
@@ -20,10 +20,10 @@ const mapDispatchToProps = (dispatch) => {
   return {};
 };
 
-Familia.propTypes = {
+Taxonomy.propTypes = {
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Familia);
+)(Taxonomy);

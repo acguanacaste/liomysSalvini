@@ -1,14 +1,14 @@
 // Import Actions
-import {  } from './EspecieActions';
+import {  } from './SpecieActions';
 
 // Initial State
 const initialState = {};
 
-const EspecieReducer = (state = initialState, action) => {
+const SpecieReducer = (state = initialState, action) => {
   switch (action.type) {
     default:
       return state;
   }
 };
 
-export default EspecieReducer;
+export default SpecieReducer;

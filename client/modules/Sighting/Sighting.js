@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 // Import Style
-import styles from './Especie.css';
+import styles from './Sighting.css';
 
-class Especie extends Component {
+class Sighting extends Component {
   render() {
     return (
     );
@@ -20,10 +20,10 @@ const mapDispatchToProps = (dispatch) => {
   return {};
 };
 
-Especie.propTypes = {
+Sighting.propTypes = {
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Especie);
+)(Sighting);

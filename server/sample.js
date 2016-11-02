@@ -5,17 +5,16 @@
   MongoClient.connect('mongodb://localhost:27017/acgnaturalista', function(err, db) {
   	if (err) throw err;
 
-  	var collection = db.collection('sightings');
-    var collection2 = db.collection('taxonomies');
-  	var queue = async.queue(collection.insert.bind(collection), 1);
-    //var queue2 = async.queue(collection.insert.bind(collection2), 1);
+  	var sightings = db.collection('sightings');
+    var taxonomies = db.collection('taxonomies');
+  	var queue = async.queue(sightings.insert.bind(sightings), 1);
     var arrayExisting=[];
-    collection2.distinct('family',function(err, res){
+    //load distinct familiys from db to arrayExisting
+    taxonomies.distinct('family',function(err, res){
       if(err) return cb(err);
 
       arrayExisting= res;
     });
-    var counter = 0;
 
     csv()
   	.from.path('../server/imports/muestra.csv', {delimiter : ";", columns: true })
@@ -28,7 +27,7 @@
           return arrayExisting === row.family;
         }
         if (arrayExisting.find(findFamily) === undefined) { //famaly is not in existing array
-          collection2.insert({taxonomyType : "family", family : row.family.trim(), description : "example description"});
+          taxonomies.insert({taxonomyType : "family", family : row.family.trim(), description : "example description"});
           arrayExisting.push(row.family);
         }
   		});//push
@@ -38,10 +37,9 @@
   	})
   	.on('end', function () {
   		queue.drain = function() {
-  			collection.count(function(err, count) {
+  			sightings.count(function(err, count) {
   				console.log('Number of documents:', count);
           console.log(arrayExisting);
-          //console.log(counter);
   				db.close();
   			});
   		};

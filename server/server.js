@@ -35,6 +35,7 @@ import { fetchComponentData } from './util/fetchData';
 import posts from './routes/post.routes';
 import sightings from './routes/sighting.routes';
 import taxonomys from './routes/taxonomy.routes';
+import species from './routes/specie.routes';
 import dummyData from './dummyData';
 import serverConfig from './config';
 
@@ -60,6 +61,7 @@ app.use(Express.static(path.resolve(__dirname, '../dist')));
 app.use('/api', posts);
 app.use('/api', sightings);
 app.use('/api', taxonomys);
+app.use('/api', species);
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {

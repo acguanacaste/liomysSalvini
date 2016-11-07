@@ -11,10 +11,10 @@
   	var queue = async.queue(sightings.insert.bind(sightings), 1);
     var arrayExisting=[];
     var arrayExistingScientificName = [];
-    var jsonTaxonomies;
+    var jsonTaxonomies =[];
 
     //load distinct familiys from db to arrayExisting
-    taxonomies.distinct('family',function(err, res){
+    taxonomies.distinct('taxonomyName',function(err, res){
       if(err) return cb(err);
 
       arrayExisting= res;
@@ -41,33 +41,37 @@
   			if (err) return cb(err);
   			cb(null, res[0]);
         //finds
+
         function findFamily(arrayExisting){
           return arrayExisting === row.family;
         }
 
         function findscientificName(arrayExistingScientificName){
-          return arrayExistingScientificName === row.scientificName;
+          return arrayExistingScientificName === row.scientificname;
         }
 
         function findIDTaxonomy(jsonTaxonomies){
           return jsonTaxonomies.taxonomyName === row.family;
         }
 
-      }
-        
-        if (arrayExisting.find(findFamily) === undefined) { //famaly is not in existing array
+        if (arrayExisting.find(findFamily) === undefined) { //family is not in existing array
           taxonomies.insert({taxonomyType : "family", taxonomyName : row.family.trim(), description : "example description"});
           arrayExisting.push(row.family);
+          taxonomies.find().toArray(function(err,res){
+            if (err) {
+              console.log(err);
+            }
+            jsonTaxonomies = res;
+          });
         }
 
-
         if (arrayExistingScientificName.find(findscientificName) === undefined ) {
-
-          if (jsonTaxonomies.find(findIDTaxonomy)!= undefined) {
-            species.insert({ idPadre: jsonTaxonomies.find(findIDTaxonomy)._id ,scientificName : row.scientificname, description : "example description"});
+          if (jsonTaxonomies.find(findIDTaxonomy) !== undefined) {
+            species.insert({ idPadre: jsonTaxonomies.find(findIDTaxonomy)._id,scientificName : row.scientificname, description : "example description"});
             arrayExistingScientificName.push(row.scientificname);
           }
         }
+
 
   		});//push
   	})//transform

@@ -2,9 +2,10 @@ export default {
   locale: 'es',
   messages: {
     siteTitle: 'ACGNaturalista - Lyomis Salvini.',
-    addPost: 'Add Post',
-    switchLanguage: 'Switch Language',
-    twitterMessage: 'We are on Twitter',
+    addPost: 'Agregar Post',
+    addSighting: 'Agregar CSV',
+    switchLanguage: 'Seleccione el Lenguaje',
+    twitterMessage: 'Estamos en Twitter',
     by: 'By',
     deletePost: 'Delete Post',
     createNewPost: 'Create new post',

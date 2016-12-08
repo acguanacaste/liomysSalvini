@@ -6,11 +6,12 @@ export function getSomething(req, res) {
 
 export function getTaxonomy(req, res) {
 
-    Taxonomy.find().exec((err, taxonomys) => {
+    Taxonomy.find().exec((err, responseResult) => {
       if (err) {
         res.status(500).send(err);
       }
-      res.json({ taxonomys });
+      var responseHeader = {totalresults : Object.keys(responseResult).length, start : 0 , end : Object.keys(responseResult).length};
+      res.json({ responseHeader, responseResult });
     });
-    
+
 }

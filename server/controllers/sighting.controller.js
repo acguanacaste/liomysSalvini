@@ -12,11 +12,12 @@ export function getSomething(req, res) {
 export function getSighting(req, res) {
     //var posts = "";
     //console.log("Aqui van las observaciones");
-    Sighting.find().exec((err, sightings) => {
+    Sighting.find().exec((err, responseResult) => {
       if (err) {
         res.status(500).send(err);
       }
-      res.json({ sightings });
+      var responseHeader = {totalresults : Object.keys(responseResult).length, start : 0 , end : Object.keys(responseResult).length};
+      res.json({ responseHeader , responseResult });
     });
     //res.json({ posts });
 

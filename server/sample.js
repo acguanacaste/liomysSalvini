@@ -71,11 +71,11 @@
         }
 
         function findIDTaxonomy(jsonTaxonomies){
-          return jsonTaxonomies.taxonomyName === row.family;
+          return jsonTaxonomies.taxonomyName === row.genus;
         }
 
-        if (arrayExisting.find(findFamily) === undefined) { //family is not in existing array
-          taxonomies.insert({taxonomyType : "family", taxonomyName : row.family.trim(), description : "example description"});
+        if (arrayExisting.find(findFamily) === undefined) { //taxonimy is not in existing array
+          taxonomies.insert({taxonomyType : "family", taxonomyName : row.family.trim(), description : "example description", taxonomyPadre : row.order});
           arrayExisting.push(row.family);
           taxonomies.find().toArray(function(err,res){
             if (err) {
@@ -86,33 +86,33 @@
         }
 
         if (arrayExisting.find(findOrder) === undefined) { //family is not in existing array
-          taxonomies.insert({taxonomyType : "order", taxonomyName : row.order.trim(), description : "example description"});
+          taxonomies.insert({taxonomyType : "order", taxonomyName : row.order.trim(), description : "example description", taxonomyPadre : row.class});
           arrayExisting.push(row.order);
         }
 
         if (arrayExisting.find(findPhylum) === undefined) { //family is not in existing array
-          taxonomies.insert({taxonomyType : "phylum", taxonomyName : row.phylum.trim(), description : "example description"});
+          taxonomies.insert({taxonomyType : "phylum", taxonomyName : row.phylum.trim(), description : "example description", taxonomyPadre : row.kingdom});
           arrayExisting.push(row.phylum);
         }
 
         if (arrayExisting.find(findGenus) === undefined) { //family is not in existing array
-          taxonomies.insert({taxonomyType : "genus", taxonomyName : row.genus.trim(), description : "example description"});
+          taxonomies.insert({taxonomyType : "genus", taxonomyName : row.genus.trim(), description : "example description", taxonomyPadre: row.family});
           arrayExisting.push(row.genus);
         }
 
         if (arrayExisting.find(findKingdom) === undefined) { //family is not in existing array
-          taxonomies.insert({taxonomyType : "kingdom", taxonomyName : row.kingdom.trim(), description : "example description"});
+          taxonomies.insert({taxonomyType : "kingdom", taxonomyName : row.kingdom.trim(), description : "example description", taxonomyPadre : 0});
           arrayExisting.push(row.kingdom);
         }
 
        if (arrayExisting.find(findClass) === undefined) { //family is not in existing array
-          taxonomies.insert({taxonomyType : "class", taxonomyName : row.class.trim(), description : "example description"});
+          taxonomies.insert({taxonomyType : "class", taxonomyName : row.class.trim(), description : "example description", taxonomyPadre : row.phylum});
           arrayExisting.push(row.class);
         }
 
         if (arrayExistingScientificName.find(findscientificName) === undefined ) {
           if (jsonTaxonomies.find(findIDTaxonomy) !== undefined) {
-            species.insert({ idPadre: jsonTaxonomies.find(findIDTaxonomy)._id,scientificName : row.scientificname, description : "example description"});
+            species.insert({ idPadre: jsonTaxonomies.find(findIDTaxonomy).taxonomyName ,scientificName : row.scientificname, description : "example description"});
             arrayExistingScientificName.push(row.scientificname);
           }
         }

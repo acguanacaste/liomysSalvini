@@ -8,7 +8,7 @@ export function getSomething(req, res) {
   return res.status(200).end();
 }
 
-//Get all sightings
+// Get all sightings
 export function getSightings(req, res) {
     //var posts = "";
     //console.log("Aqui van las observaciones");
@@ -22,7 +22,7 @@ export function getSightings(req, res) {
     //res.json({ posts });
 }
 
-//Get one sighting by catalogNumber
+// Get one sighting by catalogNumber
 export function getSighting(req, res) {
   Sighting.findOne({ catalogNumber : req.params.request }).exec((err, responseResult) => {
     if (err) {
@@ -30,5 +30,19 @@ export function getSighting(req, res) {
     }
     var responseHeader = { totalresults : Object.keys(responseResult).length, start : 0 , end : Object.keys(responseResult).length};
     res.json({ responseHeader, responseResult });
+  });
+}
+
+// Get sightings by specie
+export function getSightingsSpecie(req,res){
+  const request = {scientificname : req.params.specie}
+
+  Sighting.find(request).exec((err,responseResult) => {
+    if (err || responseResult === null) {
+      res.status(500).send(err);
+    }else {
+      const responseHeader = { totalresults : Object.keys(responseResult).length, start : 0 , end : Object.keys(responseResult).length};
+      res.json({responseHeader, responseResult});
+    }
   });
 }

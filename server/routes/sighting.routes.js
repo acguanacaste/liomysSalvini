@@ -8,4 +8,7 @@ router.route('/Observaciones').get(SightingController.getSightings);
 //Get one sighting by catalogNumber
 router.route('/Observaciones/:request').get(SightingController.getSighting);
 
+// Get sightings by specie
+router.route('/Observaciones/especie/:specie').get(SightingController.getSightingsSpecie);
+
 export default router;

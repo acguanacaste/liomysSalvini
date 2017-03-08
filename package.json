@@ -17,7 +17,6 @@
     "lint": "eslint client server"
   },
   "pre-commit": [
-    "lint",
     "test"
   ],
   "repository": {
@@ -39,7 +38,6 @@
     "csv": "^0.3.7",
     "cuid": "^1.3.8",
     "express": "^4.13.4",
-    "fast-csv": "^2.1.0",
     "intl": "^1.2.4",
     "ip": "^1.1.5",
     "isomorphic-fetch": "^2.2.1",

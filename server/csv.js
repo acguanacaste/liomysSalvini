@@ -1,3 +1,6 @@
+
+  var ip = require('ip');
+
   var csv = require('csv');
   var async = require('async');
   var fs = require('fs');
@@ -37,6 +40,15 @@
     csv()
   	.from.path('../server/imports/muestra.csv', {delimiter : ";", columns: true })
   	.transform(function (row, index, cb) {
+
+      var protocol = "http";
+      var host = ip.address();
+      var port = "8000";
+      var dir = "images/importHes/";
+
+      var urlPhoto = protocol + "://" + host + ":" + port + "/" + row.fotografia;
+      row.urlPhoto = urlPhoto;
+
   		queue.push(row, function (err, res) { //meter en la cola para la bd
   			if (err) return cb(err);
   			cb(null, res[0]);
@@ -75,7 +87,7 @@
         }
 
         if (arrayExisting.find(findFamily) === undefined) { //taxonimy is not in existing array
-          taxonomies.insert({taxonomyType : "family", taxonomyName : row.family.trim(), description : "example description", taxonomyPadre : row.order});
+          taxonomies.insert({taxonomyType : "family", taxonomyName : row.family.trim(), description : "example description", taxonomyPadre : row.order, urlPhoto : row.urlPhoto });
           arrayExisting.push(row.family);
           taxonomies.find().toArray(function(err,res){
             if (err) {
@@ -86,33 +98,33 @@
         }
 
         if (arrayExisting.find(findOrder) === undefined) { //family is not in existing array
-          taxonomies.insert({taxonomyType : "order", taxonomyName : row.order.trim(), description : "example description", taxonomyPadre : row.class});
+          taxonomies.insert({taxonomyType : "order", taxonomyName : row.order.trim(), description : "example description", taxonomyPadre : row.class, urlPhoto : row.urlPhoto});
           arrayExisting.push(row.order);
         }
 
         if (arrayExisting.find(findPhylum) === undefined) { //family is not in existing array
-          taxonomies.insert({taxonomyType : "phylum", taxonomyName : row.phylum.trim(), description : "example description", taxonomyPadre : row.kingdom});
+          taxonomies.insert({taxonomyType : "phylum", taxonomyName : row.phylum.trim(), description : "example description", taxonomyPadre : row.kingdom, urlPhoto : row.urlPhoto});
           arrayExisting.push(row.phylum);
         }
 
         if (arrayExisting.find(findGenus) === undefined) { //family is not in existing array
-          taxonomies.insert({taxonomyType : "genus", taxonomyName : row.genus.trim(), description : "example description", taxonomyPadre: row.family});
+          taxonomies.insert({taxonomyType : "genus", taxonomyName : row.genus.trim(), description : "example description", taxonomyPadre: row.family, urlPhoto : row.urlPhoto });
           arrayExisting.push(row.genus);
         }
 
         if (arrayExisting.find(findKingdom) === undefined) { //family is not in existing array
-          taxonomies.insert({taxonomyType : "kingdom", taxonomyName : row.kingdom.trim(), description : "example description", taxonomyPadre : 0});
+          taxonomies.insert({taxonomyType : "kingdom", taxonomyName : row.kingdom.trim(), description : "example description", taxonomyPadre : 0, urlPhoto : row.urlPhoto});
           arrayExisting.push(row.kingdom);
         }
 
        if (arrayExisting.find(findClass) === undefined) { //family is not in existing array
-          taxonomies.insert({taxonomyType : "class", taxonomyName : row.class.trim(), description : "example description", taxonomyPadre : row.phylum});
+          taxonomies.insert({taxonomyType : "class", taxonomyName : row.class.trim(), description : "example description", taxonomyPadre : row.phylum, urlPhoto : row.urlPhoto});
           arrayExisting.push(row.class);
         }
 
         if (arrayExistingScientificName.find(findscientificName) === undefined ) {
           if (jsonTaxonomies.find(findIDTaxonomy) !== undefined) {
-            species.insert({ idPadre: jsonTaxonomies.find(findIDTaxonomy).taxonomyName ,scientificName : row.scientificname, description : "example description"});
+            species.insert({ idPadre: jsonTaxonomies.find(findIDTaxonomy).taxonomyName ,scientificName : row.scientificname, description : "example description", urlPhoto : row.urlPhoto});
             arrayExistingScientificName.push(row.scientificname);
           }
         }

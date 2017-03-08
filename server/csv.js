@@ -46,7 +46,7 @@
       var port = "8000";
       var dir = "images/importHes/";
 
-      var urlPhoto = protocol + "://" + host + ":" + port + "/" + row.fotografia;
+      var urlPhoto = protocol + "://" + host + ":" + port + "/" + dir + row.fotografia;
       row.urlPhoto = urlPhoto;
 
   		queue.push(row, function (err, res) { //meter en la cola para la bd

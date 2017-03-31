@@ -49,6 +49,16 @@
       var urlPhoto = protocol + "://" + host + ":" + port + "/" + dir + row.fotografia;
       row.urlPhoto = urlPhoto;
 
+      //change , by . in latitude and longitude
+
+      var longitude = row.decimalLongitude;
+      var latitude = row.decimalLatitude;
+
+      var newLongitude = longitude.replace(",",".");
+      var newLatitude = latitude.replace(",",".");
+      row.decimalLatitude = newLatitude;
+      row.decimalLongitude = newLongitude;
+
   		queue.push(row, function (err, res) { //meter en la cola para la bd
   			if (err) return cb(err);
   			cb(null, res[0]);

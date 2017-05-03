@@ -17,7 +17,7 @@ export function getSightings(req, res) {
         res.status(500).send(err);
       }
       var responseHeader = {totalresults : Object.keys(responseResult).length, start : 0 , end : Object.keys(responseResult).length};
-      res.json({ responseHeader , responseResult });
+      res.json({ responseHeader, responseResult });
     });
     //res.json({ posts });
 }

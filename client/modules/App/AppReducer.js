@@ -1,6 +1,6 @@
 // Import Actions
 import { TOGGLE_ADD_POST } from './AppActions';
-
+import { TOGGLE_ADD_SIGHTING } from './AppActions';
 // Initial State
 const initialState = {
   showAddPost: false,
@@ -12,7 +12,12 @@ const AppReducer = (state = initialState, action) => {
       return {
         showAddPost: !state.showAddPost,
       };
-
+      break;
+    case (TOGGLE_ADD_SIGHTING):
+      return {
+        showAddPost: !state.showAddPost,
+      };
+      break;
     default:
       return state;
   }

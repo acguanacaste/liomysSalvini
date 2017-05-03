@@ -27,6 +27,11 @@ export function Header(props, context) {
             ? <a className={styles['add-post-button']} href="#" onClick={props.toggleAddPost}><FormattedMessage id="addPost" /></a>
             : null
         }
+        {
+          context.router.isActive('/', true)
+            ? <a className={styles['add-post-button']} href="#" onClick={props.toggleAddSighting}><FormattedMessage id="addSighting" /></a>
+            : null
+        }
       </div>
     </div>
   );
@@ -38,6 +43,7 @@ Header.contextTypes = {
 
 Header.propTypes = {
   toggleAddPost: PropTypes.func.isRequired,
+  toggleAddSighting: PropTypes.func.isRequired,
   switchLanguage: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
 };

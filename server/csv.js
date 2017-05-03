@@ -1,6 +1,3 @@
-
-  var ip = require('ip');
-
   var csv = require('csv');
   var async = require('async');
   var fs = require('fs');
@@ -42,7 +39,7 @@
   	.transform(function (row, index, cb) {
 
       var protocol = "http";
-      var host = ip.address();
+      var host = 'localhost';
       var port = "8000";
       var dir = "images/importHes/";
 

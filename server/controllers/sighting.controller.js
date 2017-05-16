@@ -1,8 +1,11 @@
 import Sighting from '../models/sighting';
-import cuid from 'cuid';
-import slug from 'limax';
+import Application from '../models/application';
+import ApplicationController from './application.controller';
+import async from 'async';
 import sanitizeHtml from 'sanitize-html';
-import crypto from 'crypto';
+var crypto = require('crypto');
+
+//const encrypToken = '861decbabda7081b2215eb';
 
 
 export function getSomething(req, res) {
@@ -25,12 +28,40 @@ export function getSightings(req, res) {
 }
 
 // Get all sightings with token
-/*export function getSightingsbyToken(req, res){
-  let encrypToken = req.params.token;
-  let appName = req.params.appName;
-  let decrypToken = crypto.createHmac('sha1', appName).update(text).digest('hex');
+export function getSightingsbyToken(req, res){
+  var algorithm = 'aes-256-ctr',
+      key = '590790c8ec09149e93b34e1';
+
+  var encrypToken = req.params.token;
+  var appName = req.params.appName;
+  var decrypToken;
+
+  //var application;
+  Application.findOne({name: appName},function cb(err, app){
+    key = app._id;
+    const decipher = crypto.createDecipher(algorithm,key);
+    decrypToken = decipher.update(encrypToken,'hex','utf8');
+    decrypToken += decipher.final('utf8');
+    if(app != undefined){
+      if(decrypToken == app.decrypToken){
+        Sighting.find().exec((err, responseResult) => {
+          if (err || responseResult === null ) {
+            res.status(500).send(err);
+          }else{
+            var responseHeader = {totalresults : Object.keys(responseResult).length, start : 0 , end : Object.keys(responseResult).length};
+            res.json({ responseHeader, responseResult });
+          }
+        });
+      }else{
+        res.send("Application unAuthorized");
+      }
+    }else{
+      res.status(500).send("Application unAuthorized");
+    }
+  });
+
 }
-*/
+
 // Get one sighting by catalogNumber
 export function getSighting(req, res) {
   Sighting.findOne({ catalogNumber : req.params.request }).exec((err, responseResult) => {

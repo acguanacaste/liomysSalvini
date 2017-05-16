@@ -18,6 +18,6 @@ router.route('/Observaciones/genero/:genus').get(SightingController.getSightings
 router.route('/Observaciones/familia/:family').get(SightingController.getSightingsFamily);
 
 // Get sightings with token
-//router.route('/:token/:appName/Observaciones').get(SightingController.getSightingsbyToken);
+router.route('/:token/:appName/Observaciones').get(SightingController.getSightingsbyToken);
 
 export default router;

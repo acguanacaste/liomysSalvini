@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import path from 'path';
 import IntlWrapper from '../client/modules/Intl/IntlWrapper';
+import multer from 'multer';
 
 // Webpack Requirements
 import webpack from 'webpack';
@@ -64,6 +65,37 @@ app.use('/api', sightings);
 app.use('/api', taxonomys);
 app.use('/api', species);
 app.use('/api',applications);
+
+let storage = multer.diskStorage({
+  destination: 'server/imports',
+  filename(req, file, cb) {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+let upload = multer({ storage });
+app.post('/csv/upload', upload.single('file'), function (req, res, next) {
+  const file = req.file;
+
+  res.send("uploaded");
+})
+
+
+
+storage = multer.diskStorage({
+  destination: 'dist/images/',
+  filename(req, file, cb) {
+    cb(null, `${file.originalname}`);
+  },
+});
+
+upload = multer({ storage });
+
+
+app.post('/csv/upload/photos',upload.single('file'), function(req, res, next){
+  const file = req.file;
+
+  res.send("uploaded");
+})
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {

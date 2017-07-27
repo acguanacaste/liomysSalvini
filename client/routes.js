@@ -2,6 +2,7 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 import App from './modules/App/App';
+import FormCsv from './components/FormCsv';
 
 // require.ensure polyfill for node
 if (typeof require.ensure !== 'function') {
@@ -19,6 +20,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('./modules/Post/pages/PostListPage/PostListPage');
   require('./modules/Post/pages/PostDetailPage/PostDetailPage');
   require('./modules/Sighting/pages/SightingListPage/SightingListPage');
+  require('./components/FormCsv');
   //requiere('./modules/Sighting/pages/SightingPage/Sighting')
 }
 
@@ -29,17 +31,25 @@ export default (
     <IndexRoute
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./modules/Sighting/pages/SightingListPage/SightingListPage').default);
-          //cb(null, require('./modules/Post/pages/PostListPage/PostListPage').default);
+          //cb(null, require('./modules/Sighting/pages/SightingListPage/SightingListPage').default);
+          cb(null, require('./modules/Post/pages/PostListPage/PostListPage').default);
 
         });
       }}
     />
     <Route
-      path="/observaciones/:catalogNumber"
+      path="/posts/:slug-:cuid"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
           cb(null, require('./modules/Post/pages/PostDetailPage/PostDetailPage').default);
+        });
+      }}
+    />
+    <Route
+      path="/csv"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./components/FormCsv').default);
         });
       }}
     />

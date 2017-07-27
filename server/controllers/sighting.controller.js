@@ -8,6 +8,7 @@ var crypto = require('crypto');
 //const encrypToken = '861decbabda7081b2215eb';
 
 
+
 export function getSomething(req, res) {
   return res.status(200).end();
 }
@@ -38,11 +39,11 @@ export function getSightingsbyToken(req, res){
 
   //var application;
   Application.findOne({name: appName},function cb(err, app){
-    key = app._id;
-    const decipher = crypto.createDecipher(algorithm,key);
-    decrypToken = decipher.update(encrypToken,'hex','utf8');
-    decrypToken += decipher.final('utf8');
     if(app != undefined){
+      key = app._id;
+      const decipher = crypto.createDecipher(algorithm,key);
+      decrypToken = decipher.update(encrypToken,'hex','utf8');
+      decrypToken += decipher.final('utf8');
       if(decrypToken == app.decrypToken){
         Sighting.find().exec((err, responseResult) => {
           if (err || responseResult === null ) {
@@ -53,7 +54,7 @@ export function getSightingsbyToken(req, res){
           }
         });
       }else{
-        res.send("Application unAuthorized");
+        res.send("Application");
       }
     }else{
       res.status(500).send("Application unAuthorized");
@@ -75,7 +76,7 @@ export function getSighting(req, res) {
 
 // Get sightings by specie
 export function getSightingsSpecie(req,res){
-  const request = {scientificname : req.params.specie}
+  const request = {scientificName : req.params.specie}
 
   Sighting.find(request).exec((err,responseResult) => {
     if (err || responseResult === null) {

@@ -1,7 +1,10 @@
-  var csv = require('csv');
-  var async = require('async');
-  var fs = require('fs');
-  var MongoClient = require('mongodb').MongoClient;
+
+var csv = require('csv');
+var async = require('async');
+var MongoClient = require('mongodb').MongoClient;
+var fs = require('fs');
+
+
   MongoClient.connect('mongodb://localhost:27017/acgnaturalista', function(err, db) {
   	if (err) throw err;
 
@@ -12,6 +15,7 @@
     var arrayExisting=[];
     var arrayExistingScientificName = [];
     var jsonTaxonomies =[];
+    const applicationName = "enterolobium";
 
     //load distinct familiys from db to arrayExisting
     taxonomies.distinct('taxonomyName',function(err, res){
@@ -22,7 +26,6 @@
 
     species.distinct('scientificName',function(err,res){
       if(err) return cb(err);
-
       arrayExistingScientificName = res;
     });
 
@@ -56,6 +59,8 @@
       row.decimalLatitude = newLatitude;
       row.decimalLongitude = newLongitude;
 
+      //row.applications.push(applicationName);
+
   		queue.push(row, function (err, res) { //meter en la cola para la bd
   			if (err) return cb(err);
   			cb(null, res[0]);
@@ -86,7 +91,7 @@
         }
 
         function findscientificName(arrayExistingScientificName){
-          return arrayExistingScientificName === row.scientificname;
+          return arrayExistingScientificName === row.scientificName;
         }
 
         function findIDTaxonomy(jsonTaxonomies){
@@ -131,8 +136,8 @@
 
         if (arrayExistingScientificName.find(findscientificName) === undefined ) {
           if (jsonTaxonomies.find(findIDTaxonomy) !== undefined) {
-            species.insert({ idPadre: jsonTaxonomies.find(findIDTaxonomy).taxonomyName ,scientificName : row.scientificname, description : "example description", urlPhoto : row.urlPhoto});
-            arrayExistingScientificName.push(row.scientificname);
+            species.insert({ idPadre: jsonTaxonomies.find(findIDTaxonomy).taxonomyName ,scientificName : row.scientificName, description : "example description", urlPhoto : row.urlPhoto, applications: [applicationName]});
+            arrayExistingScientificName.push(row.scientificName);
           }
         }
   		});//push
@@ -144,8 +149,6 @@
   		queue.drain = function() {
   			sightings.count(function(err, count) {
   				console.log('Number of documents:', count);
-          /*console.log(arrayExisting);
-          console.log(jsonTaxonomies);*/
   				db.close();
   			});
   		};

@@ -3,6 +3,9 @@ export default {
   messages: {
     siteTitle: 'MERN Starter Blog',
     addPost: 'Add Post',
+    addSighting : 'Add Sightings',
+    addApp : 'Add App',
+    addCSV : 'Add CSV',
     switchLanguage: 'Switch Language',
     twitterMessage: 'We are on Twitter',
     by: 'By',
@@ -12,6 +15,10 @@ export default {
     postTitle: 'Post Title',
     postContent: 'Post Content',
     submit: 'Submit',
+    createNewApp: 'Create New App',
+    appName: 'App Name',
+    appDecrypToken: 'Text for encrypt/authenticate',
+    appDescription: 'App Description',
     comment: `user {name} {value, plural,
     	  =0 {does not have any comments}
     	  =1 {has # comment}

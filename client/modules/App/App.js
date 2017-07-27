@@ -13,6 +13,7 @@ import Footer from './components/Footer/Footer';
 // Import Actions
 import { toggleAddPost } from './AppActions';
 import { toggleAddSighting } from './AppActions';
+import { toggleAddCSV } from './AppActions';
 import { switchLanguage } from '../../modules/Intl/IntlActions';
 
 export class App extends Component {
@@ -31,6 +32,10 @@ export class App extends Component {
 
   toggleAddSightingSection = () => {
     this.props.dispatch(toggleAddSighting());
+  };
+
+  toggleAddCSVSection = () => {
+    this.props.dispatch(toggleAddCSV());
   };
 
   render() {
@@ -57,7 +62,8 @@ export class App extends Component {
             switchLanguage={lang => this.props.dispatch(switchLanguage(lang))}
             intl={this.props.intl}
             toggleAddPost={this.toggleAddPostSection}
-            toggleAddSightingSection={this.toggleAddSightingSection}
+            toggleAddSighting={this.toggleAddSightingSection}
+            toggleAddCSV={this.toggleAddCSVSection}
           />
           <div className={styles.container}>
             {this.props.children}

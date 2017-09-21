@@ -2,6 +2,7 @@ import Application from '../models/application';
 import Specie from '../models/specie';
 import jsonChecksum from 'json-checksum';
 import checksum from 'checksum';
+import sanitizeHtml from 'sanitize-html';
 var crypto = require('crypto');
 
 export function getSomething(req, res) {
@@ -43,5 +44,25 @@ export function checkAppState(req, res){
         });
       }else res.send("unAuthorized App");
     }
+  });
+}
+
+export function addApp(req, res) {
+  if (!req.body.app.name || !req.body.app.decrypToken || !req.body.app.description) {
+    res.status(403).end();
+  }
+
+  const newApp = new Application(req.body.app);
+
+  // Let's sanitize inputs
+  newApp.name = sanitizeHtml(newApp.name);
+  newApp.decrypToken = sanitizeHtml(newApp.decrypToken);
+  newApp.description = sanitizeHtml(newApp.description);
+
+  newApp.save().then(function(saved){
+    res.json({ app: saved });
+  },function(err){
+    if(err)
+      res.send(err);
   });
 }

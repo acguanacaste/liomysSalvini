@@ -20,4 +20,7 @@ router.route('/Observaciones/familia/:family').get(SightingController.getSightin
 // Get sightings with token
 router.route('/:token/:appName/Observaciones').get(SightingController.getSightingsbyToken);
 
+//run csv
+router.route('/Observaciones/csv').post(SightingController.runCsv);
+
 export default router;

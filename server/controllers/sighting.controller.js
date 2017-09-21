@@ -4,6 +4,7 @@ import ApplicationController from './application.controller';
 import async from 'async';
 import sanitizeHtml from 'sanitize-html';
 var crypto = require('crypto');
+import procesaCsv from '../../server/csv';
 
 //const encrypToken = '861decbabda7081b2215eb';
 
@@ -114,4 +115,9 @@ export function getSightingsFamily(req, res){
       res.json({responseHeader, responseResult});
     }
   });
+}
+
+export function runCsv(req,res){
+  procesaCsv('muestra1.csv','','');
+  res.json({ Result: "OK" });
 }

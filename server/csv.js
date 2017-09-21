@@ -1,14 +1,12 @@
-
 var csv = require('csv');
 var async = require('async');
 var MongoClient = require('mongodb').MongoClient;
 var fs = require('fs');
 
-
+function procesaCsv(nameCsv, pathImages,appName) {
   MongoClient.connect('mongodb://localhost:27017/acgnaturalista', function(err, db) {
   	if (err) throw err;
-
-  	var sightings = db.collection('sightings');
+    var sightings = db.collection('sightings');
     var taxonomies = db.collection('taxonomies');
     var species = db.collection('species');
   	var queue = async.queue(sightings.insert.bind(sightings), 1);
@@ -36,15 +34,16 @@ var fs = require('fs');
       jsonTaxonomies = res;
     });
 
+    var url = './server/imports/'+nameCsv;
 
     csv()
-  	.from.path('../server/imports/muestra.csv', {delimiter : ";", columns: true })
+  	.from.path(url, {delimiter : ";", columns: true })
   	.transform(function (row, index, cb) {
 
       var protocol = "http";
       var host = 'localhost';
       var port = "8000";
-      var dir = "images/importHes/";
+      var dir = "images/";
 
       var urlPhoto = protocol + "://" + host + ":" + port + "/" + dir + row.fotografia;
       row.urlPhoto = urlPhoto;
@@ -59,7 +58,7 @@ var fs = require('fs');
       row.decimalLatitude = newLatitude;
       row.decimalLongitude = newLongitude;
 
-      //row.applications.push(applicationName);
+      row.applications.push(applicationName);
 
   		queue.push(row, function (err, res) { //meter en la cola para la bd
   			if (err) return cb(err);
@@ -145,12 +144,9 @@ var fs = require('fs');
   	.on('error', function (err) {
   		console.log('ERROR: ' + err.message);
   	})
-  	.on('end', function () {
-  		queue.drain = function() {
-  			sightings.count(function(err, count) {
-  				console.log('Number of documents:', count);
-  				db.close();
-  			});
-  		};
+  	.on('end', function (count) {
+  		console.log('Number of documents: '+count);
   	});
   });
+}
+export default procesaCsv;

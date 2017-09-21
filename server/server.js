@@ -69,7 +69,7 @@ app.use('/api',applications);
 let storage = multer.diskStorage({
   destination: 'server/imports',
   filename(req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname}`);
+    cb(null, `${file.originalname}`);
   },
 });
 let upload = multer({ storage });

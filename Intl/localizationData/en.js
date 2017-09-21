@@ -19,6 +19,8 @@ export default {
     appName: 'App Name',
     appDecrypToken: 'Text for encrypt/authenticate',
     appDescription: 'App Description',
+    runCsv: 'Run Csv',
+    submitFiles: 'Submit Files',
     comment: `user {name} {value, plural,
     	  =0 {does not have any comments}
     	  =1 {has # comment}

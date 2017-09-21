@@ -12,4 +12,6 @@ router.route('/Aplicaciones/:appName').get(ApplicationController.getApplication)
 //Au
 router.route('/Aplicaciones/CheckState/:appName').get(ApplicationController.checkAppState);
 
+router.route('/Aplicaciones').post(ApplicationController.addApp);
+
 export default router;

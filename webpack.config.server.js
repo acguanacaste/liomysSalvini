@@ -16,6 +16,9 @@ module.exports = {
   node: {
     __filename: true,
     __dirname: true,
+    fs: "empty",
+    net: 'empty',
+    tls: 'empty',
   },
 
   resolve: {
@@ -23,6 +26,7 @@ module.exports = {
     modules: [
       'client',
       'node_modules',
+      path.join(__dirname, "js/helpers"),
     ],
   },
 

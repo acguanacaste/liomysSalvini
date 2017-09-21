@@ -32,6 +32,12 @@ module.exports = {
       'node_modules',
     ],
   },
+  node: {
+   fs: "empty",
+   net: 'empty',
+   tls: 'empty',
+   module: 'empty',
+ },
 
   module: {
     loaders: [

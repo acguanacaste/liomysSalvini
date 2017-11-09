@@ -1,21 +1,19 @@
-var csv = require('csv');
-var async = require('async');
-var MongoClient = require('mongodb').MongoClient;
-var fs = require('fs');
-
-function procesaCsv(nameCsv,appName) {
+  var csv = require('csv');
+  var async = require('async');
+  var fs = require('fs');
+  var MongoClient = require('mongodb').MongoClient;
   MongoClient.connect('mongodb://localhost:27017/acgnaturalista', function(err, db) {
   	if (err) throw err;
-    var sightings = db.collection('sightings');
+
+  	var sightings = db.collection('sightings');
     var taxonomies = db.collection('taxonomies');
     var species = db.collection('species');
   	var queue = async.queue(sightings.insert.bind(sightings), 1);
     var arrayExisting=[];
     var arrayExistingScientificName = [];
     var jsonTaxonomies =[];
-    const applicationName = appName;
     var appArray = new Array();
-    appArray.push(appName);
+      appArray.push('enterolobium');
 
     //load distinct familiys from db to arrayExisting
     taxonomies.distinct('taxonomyName',function(err, res){
@@ -26,6 +24,7 @@ function procesaCsv(nameCsv,appName) {
 
     species.distinct('scientificName',function(err,res){
       if(err) return cb(err);
+
       arrayExistingScientificName = res;
     });
 
@@ -36,20 +35,19 @@ function procesaCsv(nameCsv,appName) {
       jsonTaxonomies = res;
     });
 
-    var url = './server/imports/'+nameCsv;
 
     csv()
-  	.from.path(url, {delimiter : ";", columns: true })
+  	.from.path('../server/imports/muestra.csv', {delimiter : ";", columns: true })
   	.transform(function (row, index, cb) {
 
       var protocol = "http";
       var host = 'localhost';
       var port = "8000";
-      var dir = "images/";
+      var dir = "images/importHes/";
 
       var urlPhoto = protocol + "://" + host + ":" + port + "/" + dir + row.fotografia;
       row.urlPhoto = urlPhoto;
-
+      row.applications = appArray || [];
       //change , by . in latitude and longitude
 
       var longitude = row.decimalLongitude;
@@ -59,14 +57,12 @@ function procesaCsv(nameCsv,appName) {
       var newLatitude = latitude.replace(",",".");
       row.decimalLatitude = newLatitude;
       row.decimalLongitude = newLongitude;
-
-      row.applications= appArray || [];
+      
 
   		queue.push(row, function (err, res) { //meter en la cola para la bd
   			if (err) return cb(err);
   			cb(null, res[0]);
         //finds
-
         function findFamily(arrayExisting){
           return arrayExisting === row.family;
         }
@@ -92,7 +88,7 @@ function procesaCsv(nameCsv,appName) {
         }
 
         function findscientificName(arrayExistingScientificName){
-          return arrayExistingScientificName === row.scientificName;
+          return arrayExistingScientificName === row.scientificname;
         }
 
         function findIDTaxonomy(jsonTaxonomies){
@@ -137,8 +133,8 @@ function procesaCsv(nameCsv,appName) {
 
         if (arrayExistingScientificName.find(findscientificName) === undefined ) {
           if (jsonTaxonomies.find(findIDTaxonomy) !== undefined) {
-            species.insert({ idPadre: jsonTaxonomies.find(findIDTaxonomy).taxonomyName ,scientificName : row.scientificName, description : "example description", urlPhoto : row.urlPhoto, applications: [applicationName]});
-            arrayExistingScientificName.push(row.scientificName);
+            species.insert({ idPadre: jsonTaxonomies.find(findIDTaxonomy).taxonomyName ,scientificName : row.scientificName, description : "example description", urlPhoto : row.urlPhoto});
+            arrayExistingScientificName.push(row.scientificname);
           }
         }
   		});//push
@@ -146,9 +142,14 @@ function procesaCsv(nameCsv,appName) {
   	.on('error', function (err) {
   		console.log('ERROR: ' + err.message);
   	})
-  	.on('end', function (count) {
-  		console.log('Number of documents: '+count);
+  	.on('end', function () {
+  		queue.drain = function() {
+  			sightings.count(function(err, count) {
+  				console.log('Number of documents:', count);
+          /*console.log(arrayExisting);
+          console.log(jsonTaxonomies);*/
+  				db.close();
+  			});
+  		};
   	});
   });
-}
-export default procesaCsv;

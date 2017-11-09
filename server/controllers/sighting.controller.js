@@ -118,6 +118,6 @@ export function getSightingsFamily(req, res){
 }
 
 export function runCsv(req,res){
-  procesaCsv('muestra1.csv','','');
+  procesaCsv(req.body.nameCsv,req.bodyappName);
   res.json({ Result: "OK" });
 }

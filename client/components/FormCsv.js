@@ -16,6 +16,7 @@ class FormCsv extends Component {
       files : null,
       csv : '',
       appName: '',
+      applications: [],
       };
 
       this.handleChange = this.handleChange.bind(this);
@@ -27,6 +28,8 @@ class FormCsv extends Component {
       this.closeModal = this.closeModal.bind(this);
       this.handleSubmitNewApp = this.handleSubmitNewApp.bind(this);
       this.handleCsvButton = this.handleCsvButton.bind(this);
+      this.loadApplicationsEnabled = this.loadApplicationsEnabled.bind(this);
+      this.handleSelectChange = this.handleSelectChange.bind(this);
     }
 
     openModal() {
@@ -35,7 +38,7 @@ class FormCsv extends Component {
 
     afterOpenModal() {
       // references are now sync'd and can be accessed.
-      this.subtitle.style.color = '#f00';
+      this.loadApplicationsEnabled();
     }
 
     closeModal() {
@@ -60,8 +63,10 @@ class FormCsv extends Component {
     }
     handleCsvButton(){
       const nameCsv = this.state.csv.name;
+      const appName = this.state.appName;
       callApi('Observaciones/csv','post',{
         nameCsv: nameCsv,
+        appName: appName,
       }).then(function(res){
         if(res.Result =="OK")
           alert("Se insertaron los documentos");
@@ -72,7 +77,8 @@ class FormCsv extends Component {
       const nameRef = this.refs.name;
       const decryptRef = this.refs.decrypt;
       const descriptionRef = this.refs.description;
-
+      if(this.state.appName == "" && this.refs.name != "")
+      {
       callApi('Aplicaciones', 'post', {
         app: {
           name: nameRef.value,
@@ -81,9 +87,9 @@ class FormCsv extends Component {
         },
       }).then(function(res){
         alert(res.app.name);
-        this.setState({appName:res.app.name}); 
+        this.setState({appName:res.app.name});
       });
-
+    }
       this.closeModal();
 
       //procesaCsv(this.state.csv.name,'','');
@@ -116,7 +122,22 @@ class FormCsv extends Component {
       this.setState({ files : acceptedFiles });
     }
 
+    loadApplicationsEnabled(){
+      callApi('Aplicaciones').then(function(res){
+        return res.apps;
+      }).then(data => {
+        let apps = data.map((app)=>{
+          return (
+            <option value={app.name} key={app._id}>{app.name}</option>
+          );
+        })
+        this.setState({applications: apps});
+      });
+    }
 
+    handleSelectChange(e){
+    this.setState({appName:e.target.value});
+  }
 
   render() {
     return (
@@ -146,6 +167,11 @@ class FormCsv extends Component {
           contentLabel= 'Create New App'>
         <div>
           <div className={styles['form-content']}>
+          <select onChange={this.handleSelectChange} className={styles['styled-select']}>
+            <option value="0">Select an existing app</option>
+            {this.state.applications}
+          </select>
+          <h4>OR</h4>
             <h2 className={styles['form-title']}><FormattedMessage id="createNewApp" /></h2>
             <input placeholder="App Name" className={styles['form-field']} ref="name" />
             <input placeholder='App Decrypt Token' className={styles['form-field']} ref="decrypt" />
